@@ -24,9 +24,15 @@ rough_plot <- function(
   preserve_text = TRUE,
   font = system.file("font/IndieFlower-Regular.ttf", package = "ggrough2")
 ) {
-  if (!inherits(plot, "ggplot")) stop("`plot` must be a ggplot object.", call. = FALSE)
-  if (!is.numeric(width) || width <= 0)  stop("`width` must be a positive number (inches).", call. = FALSE)
-  if (!is.numeric(height) || height <= 0) stop("`height` must be a positive number (inches).", call. = FALSE)
+  if (!inherits(plot, "ggplot")) {
+    stop("`plot` must be a ggplot object.", call. = FALSE)
+  }
+  if (!is.numeric(width) || width <= 0) {
+    stop("`width` must be a positive number (inches).", call. = FALSE)
+  }
+  if (!is.numeric(height) || height <= 0) {
+    stop("`height` must be a positive number (inches).", call. = FALSE)
+  }
 
   font_data <- make_font_data(font)
 
@@ -38,7 +44,7 @@ rough_plot <- function(
   )
 
   x <- list(
-    svg  = paste(svg, collapse = "\n"),
+    svg = paste(svg, collapse = "\n"),
     font = font_data,
     options = validate_rough_options(
       roughness = roughness,
@@ -59,7 +65,9 @@ rough_plot <- function(
 }
 
 make_font_data <- function(font) {
-  if (is.null(font) || !nzchar(font)) return(NULL)
+  if (is.null(font) || !nzchar(font)) {
+    return(NULL)
+  }
 
   if (!is.character(font) || length(font) != 1) {
     stop("`font` must be a single file path or NULL.", call. = FALSE)
@@ -69,10 +77,11 @@ make_font_data <- function(font) {
   }
 
   ext <- tolower(tools::file_ext(font))
-  mime <- switch(ext,
-    ttf   = "font/truetype",
-    otf   = "font/otf",
-    woff  = "font/woff",
+  mime <- switch(
+    ext,
+    ttf = "font/truetype",
+    otf = "font/otf",
+    woff = "font/woff",
     woff2 = "font/woff2",
     stop("`font` must be a .ttf, .otf, .woff, or .woff2 file.", call. = FALSE)
   )
@@ -81,12 +90,12 @@ make_font_data <- function(font) {
   b64 <- base64enc::base64encode(raw_bytes)
 
   list(
-    name     = tools::file_path_sans_ext(basename(font)),
+    name = tools::file_path_sans_ext(basename(font)),
     data_uri = paste0("data:", mime, ";base64,", b64)
   )
 }
 
 #' @export
 print.ggrough2 <- function(x, ...) {
-  htmlwidgets::print.htmlwidget(x, ...)
+  NextMethod()
 }
