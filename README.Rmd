@@ -47,6 +47,7 @@ drawn. Available options are `"hachure"` (default), `"cross-hatch"`, `"dots"`,
 `"zigzag"`, `"dashed"`, `"zigzag-line"`, and `"solid"`.
 
 ```{r fill-styles, eval = TRUE}
+
 p <- ggplot(diamonds, aes(cut)) +
   geom_bar()
 
@@ -60,7 +61,8 @@ Use `bg_fill_style` to control the fill style of panel and plot backgrounds
 independently from data elements. By default backgrounds are `"solid"` while
 geoms use `"hachure"`.
 
-```{r bg-fill, eval = TRUE
+```{r bg-fill, eval = TRUE}
+
 p <- ggplot(mpg, aes(displ, hwy)) +
   geom_point(size = 3) +
   theme(

@@ -29,7 +29,7 @@ p <- ggplot(mpg, aes(displ, hwy)) +
   geom_point()
 
 rough_plot(p, width = 7, height = 5)
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpOURfZF/fileaa1d700d9731/widgetaa1dc414b70.html screenshot completed
+#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/Rtmpw5NNKz/fileaf6a1a38b292/widgetaf6a539cb1.html screenshot completed
 ```
 
 <img src="man/figures/README-basic-1.png" width="800" />
@@ -42,18 +42,19 @@ boxes) are drawn. Available options are `"hachure"` (default),
 `"solid"`.
 
 ``` r
+
 p <- ggplot(diamonds, aes(cut)) +
   geom_bar()
 
 rough_plot(p, fill_style = "cross-hatch")
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpOURfZF/fileaa1d7593757a/widgetaa1d2405d8e4.html screenshot completed
+#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/Rtmpw5NNKz/fileaf6a21e24d74/widgetaf6a104b0c0d.html screenshot completed
 ```
 
 <img src="man/figures/README-fill-styles-1.png" width="800" />
 
 ``` r
 rough_plot(p, fill_style = "dots")
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpOURfZF/fileaa1d4ff9dc1d/widgetaa1d1ce21cf0.html screenshot completed
+#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/Rtmpw5NNKz/fileaf6a3c63f0b7/widgetaf6a45509d5a.html screenshot completed
 ```
 
 <img src="man/figures/README-fill-styles-2.png" width="800" />
@@ -64,31 +65,44 @@ Use `bg_fill_style` to control the fill style of panel and plot
 backgrounds independently from data elements. By default backgrounds are
 `"solid"` while geoms use `"hachure"`.
 
-\`\`\`{r bg-fill, eval = TRUE p \<- ggplot(mpg, aes(displ, hwy)) +
-geom_point(size = 3) + theme( panel.background = element_rect(fill =
-“lightyellow”), plot.background = element_rect(fill = “lightyellow”) )
+``` r
+
+p <- ggplot(mpg, aes(displ, hwy)) +
+  geom_point(size = 3) +
+  theme(
+    panel.background = element_rect(fill = "lightyellow"),
+    plot.background  = element_rect(fill = "lightyellow")
+  )
 
 # solid panel background, hachure geoms (default)
-
 rough_plot(p)
+#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/Rtmpw5NNKz/fileaf6a6b069aa5/widgetaf6a7e92fd87.html screenshot completed
+```
+
+<img src="man/figures/README-bg-fill-1.png" width="800" />
+
+``` r
 
 # dotted panel background, cross-hatch geoms
+rough_plot(p, fill_style = "cross-hatch", bg_fill_style = "dots")
+#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/Rtmpw5NNKz/fileaf6a655179d0/widgetaf6a48147aa7.html screenshot completed
+```
 
-rough_plot(p, fill_style = “cross-hatch”, bg_fill_style = “dots”)
+<img src="man/figures/README-bg-fill-2.png" width="800" />
 
+## Roughness and bowing
 
-    ## Roughness and bowing
+`roughness` controls how jagged the lines are (0 = perfectly smooth, up
+to 10). `bowing` controls how much straight lines bow outwards. Higher
+values create a more exaggerated hand-drawn effect.
 
-    `roughness` controls how jagged the lines are (0 = perfectly smooth, up to 10).
-    `bowing` controls how much straight lines bow outwards. Higher values create a more exaggerated hand-drawn effect.
+``` r
+p <- ggplot(mpg, aes(class)) +
+  geom_bar()
 
-
-    ``` r
-    p <- ggplot(mpg, aes(class)) +
-      geom_bar()
-
-    rough_plot(p, roughness = 3, bowing = 2)
-    #> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpOURfZF/fileaa1d39634ef8/widgetaa1d26d59937.html screenshot completed
+rough_plot(p, roughness = 3, bowing = 2)
+#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/Rtmpw5NNKz/fileaf6a783e2ec8/widgetaf6a3a718a24.html screenshot completed
+```
 
 <img src="man/figures/README-roughness-1.png" width="800" />
 
