@@ -13,6 +13,9 @@
 #' @param font Path to a font file (.ttf, .otf, .woff, .woff2) to use for text
 #'   labels. Defaults to the bundled Indie Flower handwritten font. Set to
 #'   `NULL` to leave the plot's original fonts unchanged.
+#' @param options A list of additional Rough.js drawing options, typically
+#'   created with [rough_options()]. Controls parameters such as
+#'   `fill_weight`, `hachure_angle`, `hachure_gap`, `simplification`, etc.
 #'
 #' @return An htmlwidget.
 #' @export
@@ -26,7 +29,8 @@ rough_plot <- function(
   bg_fill_style = "solid",
   seed = NULL,
   preserve_text = TRUE,
-  font = system.file("font/IndieFlower-Regular.ttf", package = "ggrough2")
+  font = system.file("font/IndieFlower-Regular.ttf", package = "ggrough2"),
+  options = rough_options()
 ) {
   if (!inherits(plot, "ggplot")) {
     stop("`plot` must be a ggplot object.", call. = FALSE)
@@ -56,7 +60,8 @@ rough_plot <- function(
       fill_style = fill_style,
       bg_fill_style = bg_fill_style,
       seed = seed,
-      preserve_text = preserve_text
+      preserve_text = preserve_text,
+      options = options
     )
   )
 

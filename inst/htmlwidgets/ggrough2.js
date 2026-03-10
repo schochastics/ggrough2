@@ -41,6 +41,14 @@ HTMLWidgets.widget({
           fillStyle: opts.fillStyle || "hachure"
         };
 
+        // Forward any extra Rough.js options (fillWeight, hachureAngle, etc.)
+        var baseKeys = new Set(["roughness","bowing","fillStyle","bgFillStyle","seed","preserveText"]);
+        Object.keys(opts).forEach(function(k) {
+          if (!baseKeys.has(k) && opts[k] !== null && opts[k] !== undefined) {
+            roughConfig[k] = opts[k];
+          }
+        });
+
         var bgFillStyle = opts.bgFillStyle !== undefined ? opts.bgFillStyle : opts.fillStyle || "hachure";
         var twoPass = bgFillStyle !== roughConfig.fillStyle;
 
