@@ -23,6 +23,14 @@ HTMLWidgets.widget({
         }
         var sourceSvg = doc.documentElement;
 
+        // Apply custom font to source SVG text elements so svg2roughjs
+        // picks it up via getComputedStyle when building the output SVG.
+        if (x.font) {
+          sourceSvg.querySelectorAll("text, tspan").forEach(function(el) {
+            el.style.fontFamily = '"' + x.font.name + '"';
+          });
+        }
+
         // svg2roughjs checks document.body.contains() and reads <style> elements,
         // so the source SVG must be attached to the live DOM (hidden).
         var hiddenHolder = document.createElement("div");
@@ -65,6 +73,13 @@ HTMLWidgets.widget({
           try {
             var roughSvg = await converter.sketch();
             if (roughSvg instanceof SVGElement) {
+              // Inject @font-face into the output SVG so the browser can render it.
+              if (x.font) {
+                var style = document.createElementNS("http://www.w3.org/2000/svg", "style");
+                style.textContent = '@font-face { font-family: "' + x.font.name +
+                  '"; src: url("' + x.font.data_uri + '"); }';
+                roughSvg.insertBefore(style, roughSvg.firstChild);
+              }
               roughSvg.style.maxWidth = "100%";
               roughSvg.style.height = "auto";
               roughSvg.style.display = "block";
