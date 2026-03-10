@@ -59,7 +59,7 @@ save_rough_image <- function(
       delay = delay,
       vwidth = vwidth,
       vheight = vheight,
-      selector = ".ggrough2"
+      selector = ".ggrough2 > div"
     )
   } else {
     b <- chromote::ChromoteSession$new()
@@ -77,8 +77,20 @@ save_rough_image <- function(
 
     result <- b$Runtime$evaluate(
       '(function() {
-        var svg = document.querySelector(".ggrough2 svg");
-        return svg ? svg.outerHTML : "";
+        var el = document.querySelector(".ggrough2");
+        if (!el) return "";
+        var svgs = Array.from(el.querySelectorAll("svg"));
+        if (svgs.length === 0) return "";
+        if (svgs.length === 1) return svgs[0].outerHTML;
+        // Two-pass layout: merge fg SVG content into bg SVG so both layers
+        // are captured in a single SVG file.
+        var out = svgs[0].cloneNode(true);
+        var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        Array.from(svgs[1].childNodes).forEach(function(n) {
+          g.appendChild(n.cloneNode(true));
+        });
+        out.appendChild(g);
+        return out.outerHTML;
       })()',
       wait_ = TRUE
     )
