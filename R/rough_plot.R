@@ -4,7 +4,10 @@
 #' @param width,height Plot size in inches.
 #' @param roughness Rough.js roughness parameter.
 #' @param bowing Rough.js bowing parameter.
-#' @param fill_style Rough.js fill style.
+#' @param fill_style Rough.js fill style for data elements (geoms).
+#' @param bg_fill_style Rough.js fill style for background elements (panel/plot
+#'   backgrounds). Defaults to `"solid"`. Use the same value as `fill_style` to
+#'   apply a uniform style to everything.
 #' @param seed Optional seed for deterministic randomness.
 #' @param preserve_text Keep text unchanged.
 #' @param font Path to a font file (.ttf, .otf, .woff, .woff2) to use for text
@@ -20,6 +23,7 @@ rough_plot <- function(
   roughness = 1.5,
   bowing = 1,
   fill_style = "hachure",
+  bg_fill_style = "solid",
   seed = NULL,
   preserve_text = TRUE,
   font = system.file("font/IndieFlower-Regular.ttf", package = "ggrough2")
@@ -50,6 +54,7 @@ rough_plot <- function(
       roughness = roughness,
       bowing = bowing,
       fill_style = fill_style,
+      bg_fill_style = bg_fill_style,
       seed = seed,
       preserve_text = preserve_text
     )

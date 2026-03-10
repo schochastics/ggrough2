@@ -2,6 +2,7 @@ validate_rough_options <- function(
   roughness = 1.5,
   bowing = 1,
   fill_style = "hachure",
+  bg_fill_style = "solid",
   seed = NULL,
   preserve_text = TRUE
 ) {
@@ -13,6 +14,10 @@ validate_rough_options <- function(
   }
   fill_style <- match.arg(
     fill_style,
+    choices = c("hachure", "solid", "zigzag", "cross-hatch", "dots", "dashed", "zigzag-line")
+  )
+  bg_fill_style <- match.arg(
+    bg_fill_style,
     choices = c("hachure", "solid", "zigzag", "cross-hatch", "dots", "dashed", "zigzag-line")
   )
   if (!is.null(seed)) {
@@ -29,6 +34,7 @@ validate_rough_options <- function(
     roughness    = roughness,
     bowing       = bowing,
     fillStyle    = fill_style,
+    bgFillStyle  = bg_fill_style,
     seed         = seed,
     preserveText = preserve_text
   )
