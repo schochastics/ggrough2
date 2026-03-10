@@ -10,5 +10,3 @@ save_rough_html <- function(plot, file, ...) {
   htmlwidgets::saveWidget(w, file = file, selfcontained = TRUE)
   invisible(file)
 }
-
-# For a true save_rough_svg(), you would later add a headless browser step with chromote or webshot2 that reads the transformed DOM and writes out the resulting <svg>.
