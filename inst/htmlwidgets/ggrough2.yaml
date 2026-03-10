@@ -4,3 +4,8 @@ dependencies:
     src: htmlwidgets/lib/rough
     script:
       - rough.js
+  - name: svg2roughjs
+    version: 3.2.3
+    src: htmlwidgets/lib/svg2rough
+    script:
+      - svg2rough.js
