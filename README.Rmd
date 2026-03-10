@@ -8,7 +8,8 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-"
+  fig.path = "man/figures/README-",
+  out.width = 800
 )
 ```
 
@@ -29,7 +30,7 @@ remotes::install_github("schochastics/ggrough2")
 
 Pass any ggplot object to `rough_plot()`.
 
-```{r basic, eval = TRUE,out.width = 800}
+```{r basic, eval = TRUE}
 library(ggplot2)
 library(ggrough2)
 
@@ -45,7 +46,7 @@ The `fill_style` argument controls how filled shapes (bars, areas, boxes) are
 drawn. Available options are `"hachure"` (default), `"cross-hatch"`, `"dots"`,
 `"zigzag"`, `"dashed"`, `"zigzag-line"`, and `"solid"`.
 
-```{r fill-styles, eval = FALSE}
+```{r fill-styles, eval = TRUE}
 p <- ggplot(diamonds, aes(cut)) +
   geom_bar()
 
@@ -59,7 +60,7 @@ Use `bg_fill_style` to control the fill style of panel and plot backgrounds
 independently from data elements. By default backgrounds are `"solid"` while
 geoms use `"hachure"`.
 
-```{r bg-fill, eval = FALSE}
+```{r bg-fill, eval = TRUE
 p <- ggplot(mpg, aes(displ, hwy)) +
   geom_point(size = 3) +
   theme(
@@ -79,7 +80,7 @@ rough_plot(p, fill_style = "cross-hatch", bg_fill_style = "dots")
 `roughness` controls how jagged the lines are (0 = perfectly smooth, up to 10).
 `bowing` controls how much straight lines bow outwards. Higher values create a more exaggerated hand-drawn effect.
 
-```{r roughness, eval = FALSE}
+```{r roughness, eval = TRUE}
 p <- ggplot(mpg, aes(class)) +
   geom_bar()
 
@@ -91,6 +92,7 @@ rough_plot(p, roughness = 3, bowing = 2)
 Rough.js uses randomness to vary each stroke. Pass `seed` to get a stable result.
 
 ```{r seed, eval = FALSE}
+rough_plot(p, seed = 42)
 rough_plot(p, seed = 42)
 ```
 

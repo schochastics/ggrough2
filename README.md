@@ -28,7 +28,7 @@ p <- ggplot(mpg, aes(displ, hwy)) +
   geom_point()
 
 rough_plot(p, width = 7, height = 5)
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpAu3eMK/file60274c3cc08e/widget60272885d1bc.html screenshot completed
+#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpnaU3hc/filea52643e1656e/widgeta5262ca3b93.html screenshot completed
 ```
 
 <img src="man/figures/README-basic-1.png" width="800" />
@@ -45,8 +45,17 @@ p <- ggplot(diamonds, aes(cut)) +
   geom_bar()
 
 rough_plot(p, fill_style = "cross-hatch")
-rough_plot(p, fill_style = "dots")
+#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpnaU3hc/filea5264c4bc174/widgeta526189cdce.html screenshot completed
 ```
+
+<img src="man/figures/README-fill-styles-1.png" width="800" />
+
+``` r
+rough_plot(p, fill_style = "dots")
+#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpnaU3hc/filea52615c337c1/widgeta52643816b10.html screenshot completed
+```
+
+<img src="man/figures/README-fill-styles-2.png" width="800" />
 
 ## Background fill style
 
@@ -54,33 +63,33 @@ Use `bg_fill_style` to control the fill style of panel and plot
 backgrounds independently from data elements. By default backgrounds are
 `"solid"` while geoms use `"hachure"`.
 
-``` r
-p <- ggplot(mpg, aes(displ, hwy)) +
-  geom_point(size = 3) +
-  theme(
-    panel.background = element_rect(fill = "lightyellow"),
-    plot.background  = element_rect(fill = "lightyellow")
-  )
+\`\`\`{r bg-fill, eval = TRUE p \<- ggplot(mpg, aes(displ, hwy)) +
+geom_point(size = 3) + theme( panel.background = element_rect(fill =
+“lightyellow”), plot.background = element_rect(fill = “lightyellow”) )
 
 # solid panel background, hachure geoms (default)
+
 rough_plot(p)
 
 # dotted panel background, cross-hatch geoms
-rough_plot(p, fill_style = "cross-hatch", bg_fill_style = "dots")
-```
 
-## Roughness and bowing
+rough_plot(p, fill_style = “cross-hatch”, bg_fill_style = “dots”)
 
-`roughness` controls how jagged the lines are (0 = perfectly smooth, up
-to 10). `bowing` controls how much straight lines bow outwards. Higher
-values create a more exaggerated hand-drawn effect.
 
-``` r
-p <- ggplot(mpg, aes(class)) +
-  geom_bar()
+    ## Roughness and bowing
 
-rough_plot(p, roughness = 3, bowing = 2)
-```
+    `roughness` controls how jagged the lines are (0 = perfectly smooth, up to 10).
+    `bowing` controls how much straight lines bow outwards. Higher values create a more exaggerated hand-drawn effect.
+
+
+    ``` r
+    p <- ggplot(mpg, aes(class)) +
+      geom_bar()
+
+    rough_plot(p, roughness = 3, bowing = 2)
+    #> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpnaU3hc/filea5261586708f/widgeta5262d47c753.html screenshot completed
+
+<img src="man/figures/README-roughness-1.png" width="800" />
 
 ## Reproducible output
 
@@ -88,6 +97,7 @@ Rough.js uses randomness to vary each stroke. Pass `seed` to get a
 stable result.
 
 ``` r
+rough_plot(p, seed = 42)
 rough_plot(p, seed = 42)
 ```
 
