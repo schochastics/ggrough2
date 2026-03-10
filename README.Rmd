@@ -93,7 +93,7 @@ rough_plot(p, roughness = 3, bowing = 2)
 
 Rough.js uses randomness to vary each stroke. Pass `seed` to get a stable result.
 
-```{r seed, eval = FALSE}
+```{r seed, eval = TRUE}
 rough_plot(p, seed = 42)
 rough_plot(p, seed = 42)
 ```

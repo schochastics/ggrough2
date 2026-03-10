@@ -106,8 +106,15 @@ stable result.
 
 ``` r
 rough_plot(p, seed = 42)
+```
+
+<img src="man/figures/README-seed-1.png" width="800" />
+
+``` r
 rough_plot(p, seed = 42)
 ```
+
+<img src="man/figures/README-seed-2.png" width="800" />
 
 ## Custom fonts
 
