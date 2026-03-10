@@ -13,8 +13,7 @@ This package is a rework of the dormant
 ## Installation
 
 ``` r
-# install.packages("remotes")
-remotes::install_github("schochastics/ggrough2")
+pak::pak("schochastics/ggrough2")
 ```
 
 ## Basic usage

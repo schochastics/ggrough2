@@ -23,8 +23,7 @@ This package is a rework of the dormant [ggrough](https://github.com/xvrdm/ggrou
 ## Installation
 
 ```{r, eval = FALSE}
-# install.packages("remotes")
-remotes::install_github("schochastics/ggrough2")
+pak::pak("schochastics/ggrough2")
 ```
 
 ## Basic usage
