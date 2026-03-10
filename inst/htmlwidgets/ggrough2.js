@@ -81,14 +81,19 @@ HTMLWidgets.widget({
 
             } else {
               // ── Two-pass path (bg and fg use different fill styles) ───────
-              // Identify background rects: ggplot2 always clips geom elements to the
-              // panel viewport, so data rects (bars, tiles, etc.) live inside a
-              // <g clip-path="..."> group. Panel/plot background rects never do.
+              // Identify background rects: within any parent group, the background rect
+              // is rendered first (before grid lines, axis lines, and geoms). A rect is
+              // a background if no geom-type sibling (line, path, circle, etc.) precedes
+              // it in the same parent. Bars/tiles/etc. always follow grid lines, so they
+              // correctly fall through as non-background.
+              var geomTags = new Set(["path", "line", "circle", "ellipse", "polygon", "polyline"]);
               function isBackgroundRect(rect) {
-                var parent = rect.parentNode;
-                if (!parent) return false;
-                if (parent.getAttribute && parent.getAttribute("clip-path")) return false;
-                return true;
+                var siblings = rect.parentNode ? rect.parentNode.children : [];
+                for (var i = 0; i < siblings.length; i++) {
+                  if (siblings[i] === rect) return true;
+                  if (geomTags.has(siblings[i].tagName.toLowerCase())) return false;
+                }
+                return false;
               }
 
               var allRects = Array.from(sourceSvg.querySelectorAll("rect"));
