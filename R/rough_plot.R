@@ -63,8 +63,8 @@ rough_plot <- function(
   htmlwidgets::createWidget(
     name = "ggrough2",
     x = x,
-    width = NULL,
-    height = NULL,
+    width  = width  * 96,
+    height = height * 96,
     package = "ggrough2"
   )
 }
