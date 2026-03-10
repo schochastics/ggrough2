@@ -29,7 +29,6 @@ p <- ggplot(mpg, aes(displ, hwy)) +
   geom_point()
 
 rough_plot(p, width = 7, height = 5)
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/Rtmpw5NNKz/fileaf6a1a38b292/widgetaf6a539cb1.html screenshot completed
 ```
 
 <img src="man/figures/README-basic-1.png" width="800" />
@@ -47,14 +46,12 @@ p <- ggplot(diamonds, aes(cut)) +
   geom_bar()
 
 rough_plot(p, fill_style = "cross-hatch")
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/Rtmpw5NNKz/fileaf6a21e24d74/widgetaf6a104b0c0d.html screenshot completed
 ```
 
 <img src="man/figures/README-fill-styles-1.png" width="800" />
 
 ``` r
 rough_plot(p, fill_style = "dots")
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/Rtmpw5NNKz/fileaf6a3c63f0b7/widgetaf6a45509d5a.html screenshot completed
 ```
 
 <img src="man/figures/README-fill-styles-2.png" width="800" />
@@ -76,7 +73,6 @@ p <- ggplot(mpg, aes(displ, hwy)) +
 
 # solid panel background, hachure geoms (default)
 rough_plot(p)
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/Rtmpw5NNKz/fileaf6a6b069aa5/widgetaf6a7e92fd87.html screenshot completed
 ```
 
 <img src="man/figures/README-bg-fill-1.png" width="800" />
@@ -85,7 +81,6 @@ rough_plot(p)
 
 # dotted panel background, cross-hatch geoms
 rough_plot(p, fill_style = "cross-hatch", bg_fill_style = "dots")
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/Rtmpw5NNKz/fileaf6a655179d0/widgetaf6a48147aa7.html screenshot completed
 ```
 
 <img src="man/figures/README-bg-fill-2.png" width="800" />
@@ -101,7 +96,6 @@ p <- ggplot(mpg, aes(class)) +
   geom_bar()
 
 rough_plot(p, roughness = 3, bowing = 2)
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/Rtmpw5NNKz/fileaf6a783e2ec8/widgetaf6a3a718a24.html screenshot completed
 ```
 
 <img src="man/figures/README-roughness-1.png" width="800" />
