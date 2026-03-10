@@ -5,11 +5,9 @@
 
 **ggrough2** converts ggplot2 visualizations into hand-drawn,
 sketch-style graphics. It works by rendering your plot to SVG and then
-re-drawing every element using [Rough.js](https://roughjs.com/), giving
-your charts a natural, hand-sketched look.
+re-drawing every element using [Rough.js](https://roughjs.com/).
 
-The output is an [htmlwidget](https://www.htmlwidgets.org/), so it
-displays inline in RStudio, R Markdown, and Quarto documents.
+The output is an [htmlwidget](https://www.htmlwidgets.org/).
 
 ## Installation
 
@@ -20,7 +18,7 @@ remotes::install_github("schochastics/ggrough2")
 
 ## Basic usage
 
-Pass any ggplot object to `rough_plot()`:
+Pass any ggplot object to `rough_plot()`.
 
 ``` r
 library(ggplot2)
@@ -30,7 +28,7 @@ p <- ggplot(mpg, aes(displ, hwy)) +
   geom_point()
 
 rough_plot(p, width = 7, height = 5)
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpFjEv6o/file51573dbcfe25/widget515742d14ecd.html screenshot completed
+#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpAu3eMK/file60274c3cc08e/widget60272885d1bc.html screenshot completed
 ```
 
 <img src="man/figures/README-basic-1.png" width="800" />
@@ -54,7 +52,7 @@ rough_plot(p, fill_style = "dots")
 
 Use `bg_fill_style` to control the fill style of panel and plot
 backgrounds independently from data elements. By default backgrounds are
-`"solid"` while geoms use `"hachure"`:
+`"solid"` while geoms use `"hachure"`.
 
 ``` r
 p <- ggplot(mpg, aes(displ, hwy)) +
@@ -74,7 +72,8 @@ rough_plot(p, fill_style = "cross-hatch", bg_fill_style = "dots")
 ## Roughness and bowing
 
 `roughness` controls how jagged the lines are (0 = perfectly smooth, up
-to 10). `bowing` controls how much straight lines bow outwards:
+to 10). `bowing` controls how much straight lines bow outwards. Higher
+values create a more exaggerated hand-drawn effect.
 
 ``` r
 p <- ggplot(mpg, aes(class)) +
@@ -86,7 +85,7 @@ rough_plot(p, roughness = 3, bowing = 2)
 ## Reproducible output
 
 Rough.js uses randomness to vary each stroke. Pass `seed` to get a
-stable result:
+stable result.
 
 ``` r
 rough_plot(p, seed = 42)
@@ -97,7 +96,7 @@ rough_plot(p, seed = 42)
 Text labels default to the bundled [Indie
 Flower](https://fonts.google.com/specimen/Indie+Flower) handwritten
 font. Supply any `.ttf`, `.otf`, `.woff`, or `.woff2` file to use a
-different one, or set `font = NULL` to keep the original plot fonts:
+different one, or set `font = NULL` to keep the original plot fonts.
 
 ``` r
 # custom font
@@ -123,14 +122,3 @@ Chrome/Chromium installation):
 save_rough_image(p, "my_plot.png")
 save_rough_image(p, "my_plot.svg")
 ```
-
-## How it works
-
-1.  The ggplot2 object is rendered to an SVG string via
-    `svglite::stringSVG()`.
-2.  The SVG and rendering options are passed to an htmlwidget.
-3.  In the browser, [svg2roughjs](https://github.com/fskpf/svg2roughjs)
-    iterates every SVG element and replaces it with a hand-drawn
-    equivalent using Rough.js.
-4.  Text labels are optionally left untouched (`preserve_text = TRUE`)
-    and rendered in the bundled handwritten font.
