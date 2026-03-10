@@ -73,8 +73,8 @@ p <- ggplot(mpg, aes(displ, hwy)) +
 # solid panel background, hachure geoms (default)
 rough_plot(p)
 
-# dotted panel background, cross-hatch geoms
-rough_plot(p, fill_style = "cross-hatch", bg_fill_style = "dots")
+# hachure panel background, cross-hatch geoms
+rough_plot(p, fill_style = "cross-hatch", bg_fill_style = "hachure")
 ```
 
 ## Roughness and bowing

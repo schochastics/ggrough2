@@ -14,7 +14,6 @@ HTMLWidgets.widget({
           return;
         }
 
-        // Parse SVG string into DOM element
         var parser = new DOMParser();
         var doc = parser.parseFromString(x.svg, "image/svg+xml");
         if (doc.querySelector("parsererror")) {
@@ -23,16 +22,12 @@ HTMLWidgets.widget({
         }
         var sourceSvg = doc.documentElement;
 
-        // Apply custom font to source SVG text elements so svg2roughjs
-        // picks it up via getComputedStyle when building the output SVG.
         if (x.font) {
           sourceSvg.querySelectorAll("text, tspan").forEach(function(node) {
             node.style.fontFamily = '"' + x.font.name + '"';
           });
         }
 
-        // svg2roughjs checks document.body.contains() and reads <style> elements,
-        // so the source SVG must be attached to the live DOM (hidden).
         var hiddenHolder = document.createElement("div");
         Object.assign(hiddenHolder.style, {
           position: "absolute", visibility: "hidden",
@@ -52,7 +47,6 @@ HTMLWidgets.widget({
         (async function() {
           try {
             if (!twoPass) {
-              // ── Single-pass path (styles identical) ──────────────────────
               hiddenHolder.appendChild(sourceSvg);
 
               var targetContainer = document.createElement("div");
@@ -80,12 +74,6 @@ HTMLWidgets.widget({
               }
 
             } else {
-              // ── Two-pass path (bg and fg use different fill styles) ───────
-              // Identify background rects: within any parent group, the background rect
-              // is rendered first (before grid lines, axis lines, and geoms). A rect is
-              // a background if no geom-type sibling (line, path, circle, etc.) precedes
-              // it in the same parent. Bars/tiles/etc. always follow grid lines, so they
-              // correctly fall through as non-background.
               var geomTags = new Set(["path", "line", "circle", "ellipse", "polygon", "polyline"]);
               function isBackgroundRect(rect) {
                 var siblings = rect.parentNode ? rect.parentNode.children : [];
@@ -100,19 +88,17 @@ HTMLWidgets.widget({
               var bgRects  = allRects.filter(isBackgroundRect);
               var fgRects  = allRects.filter(function(r) { return !isBackgroundRect(r); });
 
-              // BG clone: keep only background rects; hide geom elements and fg rects
               var bgSvg = sourceSvg.cloneNode(true);
               bgSvg.querySelectorAll("path, line, circle, ellipse, polygon, polyline").forEach(function(n) {
                 n.style.display = "none";
               });
-              // Hide fg rects in bg clone by matching index in allRects
+
               var bgCloneRects = Array.from(bgSvg.querySelectorAll("rect"));
               fgRects.forEach(function(r) {
                 var idx = allRects.indexOf(r);
                 if (idx !== -1 && bgCloneRects[idx]) bgCloneRects[idx].style.display = "none";
               });
 
-              // FG clone: make background rects invisible so svg2roughjs skips their fill
               var fgSvg = sourceSvg.cloneNode(true);
               var fgCloneRects = Array.from(fgSvg.querySelectorAll("rect"));
               bgRects.forEach(function(r) {
@@ -126,7 +112,6 @@ HTMLWidgets.widget({
               hiddenHolder.appendChild(bgSvg);
               hiddenHolder.appendChild(fgSvg);
 
-              // BG pass
               var bgContainer = document.createElement("div");
               bgContainer.style.width = "100%";
               var bgConverterConfig = Object.assign({}, roughConfig, { fillStyle: bgFillStyle });
@@ -138,7 +123,6 @@ HTMLWidgets.widget({
               bgConverter.svg = bgSvg;
               var bgRoughSvg = await bgConverter.sketch();
 
-              // FG pass
               var fgContainer = document.createElement("div");
               fgContainer.style.width = "100%";
               var fgConverter = new svg2roughjs.Svg2Roughjs(
@@ -149,7 +133,6 @@ HTMLWidgets.widget({
               fgConverter.svg = fgSvg;
               var fgRoughSvg = await fgConverter.sketch();
 
-              // Inject font into fg SVG (sits on top; applies to text elements)
               if (x.font && fgRoughSvg instanceof SVGElement) {
                 var fgStyle = document.createElementNS("http://www.w3.org/2000/svg", "style");
                 fgStyle.textContent = '@font-face { font-family: "' + x.font.name +
@@ -157,7 +140,6 @@ HTMLWidgets.widget({
                 fgRoughSvg.insertBefore(fgStyle, fgRoughSvg.firstChild);
               }
 
-              // Layer: bg provides intrinsic height; fg is absolutely overlaid
               var wrapper = document.createElement("div");
               Object.assign(wrapper.style, { position: "relative", width: "100%" });
               el.appendChild(wrapper);
@@ -193,7 +175,7 @@ HTMLWidgets.widget({
       },
 
       resize: function(width, height) {
-        // Responsive sizing handled via CSS (maxWidth/height:auto). No re-render needed.
+
       }
     };
   }

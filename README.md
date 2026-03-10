@@ -78,8 +78,8 @@ rough_plot(p)
 
 ``` r
 
-# dotted panel background, cross-hatch geoms
-rough_plot(p, fill_style = "cross-hatch", bg_fill_style = "dots")
+# hachure panel background, cross-hatch geoms
+rough_plot(p, fill_style = "cross-hatch", bg_fill_style = "hachure")
 ```
 
 <img src="man/figures/README-bg-fill-2.png" width="800" />
