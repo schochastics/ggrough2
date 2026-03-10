@@ -118,8 +118,8 @@ HTMLWidgets.widget({
               bgRects.forEach(function(r) {
                 var idx = allRects.indexOf(r);
                 if (idx !== -1 && fgCloneRects[idx]) {
-                  fgCloneRects[idx].setAttribute("fill", "none");
-                  fgCloneRects[idx].setAttribute("stroke", "none");
+                  fgCloneRects[idx].style.fill = "none";
+                  fgCloneRects[idx].style.stroke = "none";
                 }
               });
 
