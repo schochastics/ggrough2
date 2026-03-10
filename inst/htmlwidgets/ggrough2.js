@@ -1,3 +1,39 @@
+// Compute a representative stroke-width (in SVG user units) from the source SVG.
+// svglite embeds stroke widths on individual elements and/or in a <style> block.
+// We sample all drawn elements, collect non-zero stroke-widths, and return the
+// median. Falls back to the value parsed from the <style> block, then to 0.75
+// (svglite's typical axis line width ≈ 0.5pt at 96 dpi).
+function _referenceStrokeWidth(svg) {
+  var tags = ["rect", "path", "line", "circle", "ellipse", "polygon", "polyline"];
+  var widths = [];
+  tags.forEach(function(tag) {
+    svg.querySelectorAll(tag).forEach(function(el) {
+      var sw = el.getAttribute("stroke-width") || el.style.strokeWidth;
+      if (sw) {
+        var v = parseFloat(sw);
+        if (v > 0) widths.push(v);
+      }
+    });
+  });
+
+  if (widths.length > 0) {
+    widths.sort(function(a, b) { return a - b; });
+    return widths[Math.floor(widths.length / 2)];
+  }
+
+  // Fall back: parse the embedded <style> block for a stroke-width rule
+  var styleEl = svg.querySelector("style");
+  if (styleEl) {
+    var m = styleEl.textContent.match(/stroke-width\s*:\s*([\d.]+)/);
+    if (m) {
+      var v = parseFloat(m[1]);
+      if (v > 0) return v;
+    }
+  }
+
+  return 0.75; // svglite default: ~0.5pt axis lines at 96 dpi
+}
+
 HTMLWidgets.widget({
   name: "ggrough2",
   type: "output",
@@ -49,6 +85,19 @@ HTMLWidgets.widget({
           }
         });
 
+        // Normalize fill density across elements.
+        // Rough.js defaults hachureGap to 4× and fillWeight to 0.5× each element's
+        // stroke-width. When elements have varying or zero stroke-widths (common in
+        // ggplot2 output), this produces inconsistent fill density across bars.
+        // Fix: derive a single reference stroke-width and set absolute values so
+        // all elements use the same fill spacing. User overrides via rough_options()
+        // take precedence because they are already in roughConfig at this point.
+        if (roughConfig.hachureGap == null || roughConfig.fillWeight == null) {
+          var _refSw = _referenceStrokeWidth(sourceSvg);
+          if (roughConfig.hachureGap  == null) roughConfig.hachureGap  = _refSw * 4;
+          if (roughConfig.fillWeight  == null) roughConfig.fillWeight   = _refSw * 0.5;
+        }
+
         var bgFillStyle = opts.bgFillStyle !== undefined ? opts.bgFillStyle : opts.fillStyle || "hachure";
         var twoPass = bgFillStyle !== roughConfig.fillStyle;
 
@@ -64,6 +113,7 @@ HTMLWidgets.widget({
               var converter = new svg2roughjs.Svg2Roughjs(
                 targetContainer, svg2roughjs.OutputType.SVG, roughConfig
               );
+              converter.randomize = false;
               if (opts.seed !== null && opts.seed !== undefined) converter.seed = opts.seed;
               if (opts.preserveText) converter.fontFamily = null;
               converter.svg = sourceSvg;
@@ -126,6 +176,7 @@ HTMLWidgets.widget({
               var bgConverter = new svg2roughjs.Svg2Roughjs(
                 bgContainer, svg2roughjs.OutputType.SVG, bgConverterConfig
               );
+              bgConverter.randomize = false;
               if (opts.seed !== null && opts.seed !== undefined) bgConverter.seed = opts.seed;
               if (opts.preserveText) bgConverter.fontFamily = null;
               bgConverter.svg = bgSvg;
@@ -136,6 +187,7 @@ HTMLWidgets.widget({
               var fgConverter = new svg2roughjs.Svg2Roughjs(
                 fgContainer, svg2roughjs.OutputType.SVG, roughConfig
               );
+              fgConverter.randomize = false;
               if (opts.seed !== null && opts.seed !== undefined) fgConverter.seed = opts.seed;
               if (opts.preserveText) fgConverter.fontFamily = null;
               fgConverter.svg = fgSvg;
