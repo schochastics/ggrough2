@@ -7,7 +7,8 @@
 sketch-style graphics. It works by rendering your plot to SVG and then
 re-drawing every element using [Rough.js](https://roughjs.com/).
 
-The output is an [htmlwidget](https://www.htmlwidgets.org/).
+This package is a rework of the dormant
+[ggrough](https://github.com/xvrdm/ggrough) package.
 
 ## Installation
 
@@ -28,7 +29,7 @@ p <- ggplot(mpg, aes(displ, hwy)) +
   geom_point()
 
 rough_plot(p, width = 7, height = 5)
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpnaU3hc/filea52643e1656e/widgeta5262ca3b93.html screenshot completed
+#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpOURfZF/fileaa1d700d9731/widgetaa1dc414b70.html screenshot completed
 ```
 
 <img src="man/figures/README-basic-1.png" width="800" />
@@ -45,14 +46,14 @@ p <- ggplot(diamonds, aes(cut)) +
   geom_bar()
 
 rough_plot(p, fill_style = "cross-hatch")
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpnaU3hc/filea5264c4bc174/widgeta526189cdce.html screenshot completed
+#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpOURfZF/fileaa1d7593757a/widgetaa1d2405d8e4.html screenshot completed
 ```
 
 <img src="man/figures/README-fill-styles-1.png" width="800" />
 
 ``` r
 rough_plot(p, fill_style = "dots")
-#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpnaU3hc/filea52615c337c1/widgeta52643816b10.html screenshot completed
+#> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpOURfZF/fileaa1d4ff9dc1d/widgetaa1d1ce21cf0.html screenshot completed
 ```
 
 <img src="man/figures/README-fill-styles-2.png" width="800" />
@@ -87,7 +88,7 @@ rough_plot(p, fill_style = “cross-hatch”, bg_fill_style = “dots”)
       geom_bar()
 
     rough_plot(p, roughness = 3, bowing = 2)
-    #> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpnaU3hc/filea5261586708f/widgeta5262d47c753.html screenshot completed
+    #> file:////private/var/folders/w9/n_d0mmqx47x8plr19gj5h7t40000gn/T/RtmpOURfZF/fileaa1d39634ef8/widgetaa1d26d59937.html screenshot completed
 
 <img src="man/figures/README-roughness-1.png" width="800" />
 

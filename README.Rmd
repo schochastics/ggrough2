@@ -15,9 +15,9 @@ knitr::opts_chunk$set(
 
 # ggrough2
 
-**ggrough2** converts ggplot2 visualizations into hand-drawn, sketch-style graphics. It works by rendering your plot to SVG and then re-drawing every element using [Rough.js](https://roughjs.com/).
+**ggrough2** converts ggplot2 visualizations into hand-drawn, sketch-style graphics. It works by rendering your plot to SVG and then re-drawing every element using [Rough.js](https://roughjs.com/). 
 
-The output is an [htmlwidget](https://www.htmlwidgets.org/).
+This package is a rework of the dormant [ggrough](https://github.com/xvrdm/ggrough) package.
 
 ## Installation
 
