@@ -131,6 +131,47 @@ rough_plot(p, font = "path/to/myfont.ttf")
 rough_plot(p, font = NULL)
 ```
 
+## Fine-tuning with `rough_options()`
+
+For finer control over fill appearance, pass a `rough_options()` list to
+the `options` argument. All parameters default to `NULL` (library
+defaults apply).
+
+**Hachure spacing and line weight** — `hachure_gap` sets the pixel
+distance between fill lines; `fill_weight` sets their thickness.
+
+``` r
+p <- ggplot(diamonds, aes(cut)) +
+  geom_bar()
+
+# wider gap between hachure lines, thicker lines
+rough_plot(p, fill_style = "hachure",
+           options = rough_options(hachure_gap = 6, fill_weight = 1.5))
+```
+
+<img src="man/figures/README-options-gap-1.png" width="800" />
+
+**Hachure angle** — rotate the fill lines with `hachure_angle`
+(degrees).
+
+``` r
+# nearly horizontal lines
+rough_plot(p, fill_style = "hachure",
+           options = rough_options(hachure_angle = -10))
+```
+
+<img src="man/figures/README-options-angle-1.png" width="800" />
+
+**Zigzag fill** — `zigzag_offset` controls the width of the zigzag
+triangles when using `"zigzag-line"` fill style.
+
+``` r
+rough_plot(p, fill_style = "zigzag-line",
+           options = rough_options(hachure_gap = 5, zigzag_offset = 8))
+```
+
+<img src="man/figures/README-options-zigzag-1.png" width="800" />
+
 ## Saving output
 
 Export to a standalone HTML file (no external dependencies):

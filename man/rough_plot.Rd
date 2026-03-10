@@ -11,9 +11,11 @@ rough_plot(
   roughness = 1.5,
   bowing = 1,
   fill_style = "hachure",
+  bg_fill_style = "solid",
   seed = NULL,
   preserve_text = TRUE,
-  font = system.file("font/IndieFlower-Regular.ttf", package = "ggrough2")
+  font = system.file("font/IndieFlower-Regular.ttf", package = "ggrough2"),
+  options = rough_options()
 )
 }
 \arguments{
@@ -25,7 +27,11 @@ rough_plot(
 
 \item{bowing}{Rough.js bowing parameter.}
 
-\item{fill_style}{Rough.js fill style.}
+\item{fill_style}{Rough.js fill style for data elements (geoms).}
+
+\item{bg_fill_style}{Rough.js fill style for background elements (panel/plot
+backgrounds). Defaults to \code{"solid"}. Use the same value as \code{fill_style} to
+apply a uniform style to everything.}
 
 \item{seed}{Optional seed for deterministic randomness.}
 
@@ -34,6 +40,10 @@ rough_plot(
 \item{font}{Path to a font file (.ttf, .otf, .woff, .woff2) to use for text
 labels. Defaults to the bundled Indie Flower handwritten font. Set to
 \code{NULL} to leave the plot's original fonts unchanged.}
+
+\item{options}{A list of additional Rough.js drawing options, typically
+created with \code{\link[=rough_options]{rough_options()}}. Controls parameters such as
+\code{fill_weight}, \code{hachure_angle}, \code{hachure_gap}, \code{simplification}, etc.}
 }
 \value{
 An htmlwidget.
