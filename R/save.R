@@ -1,3 +1,16 @@
+#' Save a roughened plot as HTML
+#'
+#' @param plot A ggplot object.
+#' @param file Output HTML file.
+#' @param ... Passed to rough_plot().
+#'
+#' @export
+save_rough_html <- function(plot, file, ...) {
+  w <- rough_plot(plot, ...)
+  htmlwidgets::saveWidget(w, file = file, selfcontained = TRUE)
+  invisible(file)
+}
+
 #' Export a roughened plot as an SVG or PNG file
 #'
 #' Renders the plot in a headless browser so the Rough.js sketch is fully drawn
@@ -13,7 +26,14 @@
 #'
 #' @return `file`, invisibly.
 #' @export
-save_rough_image <- function(plot, file, ..., delay = 2, vwidth = 992, vheight = 744) {
+save_rough_image <- function(
+  plot,
+  file,
+  ...,
+  delay = 2,
+  vwidth = 992,
+  vheight = 744
+) {
   ext <- tolower(tools::file_ext(file))
   if (!ext %in% c("svg", "png")) {
     stop('`file` must have a ".svg" or ".png" extension.', call. = FALSE)
@@ -34,9 +54,10 @@ save_rough_image <- function(plot, file, ..., delay = 2, vwidth = 992, vheight =
 
   if (ext == "png") {
     webshot2::webshot(
-      url, file = file,
-      delay   = delay,
-      vwidth  = vwidth,
+      url,
+      file = file,
+      delay = delay,
+      vwidth = vwidth,
       vheight = vheight,
       selector = ".ggrough2"
     )
@@ -45,11 +66,11 @@ save_rough_image <- function(plot, file, ..., delay = 2, vwidth = 992, vheight =
     on.exit(b$close(), add = TRUE)
 
     b$Emulation$setDeviceMetricsOverride(
-      width             = vwidth,
-      height            = vheight,
+      width = vwidth,
+      height = vheight,
       deviceScaleFactor = 1,
-      mobile            = FALSE,
-      wait_             = TRUE
+      mobile = FALSE,
+      wait_ = TRUE
     )
     b$Page$navigate(url, wait_ = TRUE)
     Sys.sleep(delay)
