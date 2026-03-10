@@ -1,0 +1,6 @@
+dependencies:
+  - name: roughjs
+    version: 4.4.6
+    src: htmlwidgets/lib/rough
+    script:
+      - rough.js
