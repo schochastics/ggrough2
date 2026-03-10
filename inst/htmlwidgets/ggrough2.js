@@ -51,9 +51,13 @@ HTMLWidgets.widget({
           converter.seed = opts.seed;
         }
 
-        // preserveText: empty string causes svg2roughjs to inherit source SVG fonts
-        // instead of defaulting to "Comic Sans MS, cursive"
-        converter.fontFamily = opts.preserveText ? "" : undefined;
+        // preserveText: null skips svg2roughjs's font-size shrinking loop (triggered
+        // when fontFamily !== null) while still inheriting source SVG fonts (falsy
+        // check inside svg2roughjs). Empty string would also inherit fonts but
+        // !== null triggers aggressive font shrinking on clipped text elements.
+        if (opts.preserveText) {
+          converter.fontFamily = null;
+        }
 
         converter.svg = sourceSvg;
 
