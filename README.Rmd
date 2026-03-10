@@ -66,8 +66,8 @@ geoms use `"hachure"`.
 p <- ggplot(mpg, aes(displ, hwy)) +
   geom_point(size = 3) +
   theme(
-    panel.background = element_rect(fill = "lightyellow"),
-    plot.background  = element_rect(fill = "lightyellow")
+    panel.background = element_rect(fill = "grey66"),
+    plot.background  = element_rect(fill = "grey66")
   )
 
 # solid panel background, hachure geoms (default)
