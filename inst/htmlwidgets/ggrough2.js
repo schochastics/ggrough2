@@ -1,154 +1,82 @@
 HTMLWidgets.widget({
-
   name: "ggrough2",
-
   type: "output",
 
   factory: function(el, width, height) {
-
-    function copyAttributes(from, to) {
-      for (let i = 0; i < from.attributes.length; i++) {
-        const attr = from.attributes[i];
-        if (!to.hasAttribute(attr.name)) {
-          to.setAttribute(attr.name, attr.value);
-        }
-      }
-    }
-
-    function numericAttr(node, name, fallback = 0) {
-      const v = node.getAttribute(name);
-      return v == null ? fallback : parseFloat(v);
-    }
-
-    function styleStroke(node) {
-      return node.getAttribute("stroke") || "black";
-    }
-
-    function styleFill(node) {
-      const fill = node.getAttribute("fill");
-      return (fill == null || fill === "none") ? "none" : fill;
-    }
-
-    function styleStrokeWidth(node) {
-      const sw = node.getAttribute("stroke-width");
-      return sw == null ? 1 : parseFloat(sw);
-    }
-
-    function roughOpts(node, userOpts) {
-      const out = {
-        roughness: userOpts.roughness,
-        bowing: userOpts.bowing,
-        fillStyle: userOpts.fillStyle,
-        stroke: styleStroke(node),
-        strokeWidth: styleStrokeWidth(node),
-        seed: userOpts.seed
-      };
-
-      const fill = styleFill(node);
-      if (fill !== "none") out.fill = fill;
-
-      return out;
-    }
-
-    function replaceNode(oldNode, newNode) {
-      if (newNode) {
-        copyAttributes(oldNode, newNode);
-        oldNode.parentNode.replaceChild(newNode, oldNode);
-      }
-    }
-
-    function roughenSvg(svg, opts) {
-      const rc = rough.svg(svg);
-
-      const nodes = Array.from(svg.querySelectorAll("*"));
-
-      nodes.forEach(node => {
-        const tag = node.tagName.toLowerCase();
-
-        if (opts.preserveText && tag === "text") return;
-
-        try {
-          if (tag === "line") {
-            const x1 = numericAttr(node, "x1");
-            const y1 = numericAttr(node, "y1");
-            const x2 = numericAttr(node, "x2");
-            const y2 = numericAttr(node, "y2");
-            const newNode = rc.line(x1, y1, x2, y2, roughOpts(node, opts));
-            replaceNode(node, newNode);
-          } else if (tag === "rect") {
-            const x = numericAttr(node, "x");
-            const y = numericAttr(node, "y");
-            const w = numericAttr(node, "width");
-            const h = numericAttr(node, "height");
-            const newNode = rc.rectangle(x, y, w, h, roughOpts(node, opts));
-            replaceNode(node, newNode);
-          } else if (tag === "circle") {
-            const cx = numericAttr(node, "cx");
-            const cy = numericAttr(node, "cy");
-            const r = numericAttr(node, "r");
-            const newNode = rc.circle(cx, cy, 2 * r, roughOpts(node, opts));
-            replaceNode(node, newNode);
-          } else if (tag === "ellipse") {
-            const cx = numericAttr(node, "cx");
-            const cy = numericAttr(node, "cy");
-            const rx = numericAttr(node, "rx");
-            const ry = numericAttr(node, "ry");
-            const newNode = rc.ellipse(cx, cy, 2 * rx, 2 * ry, roughOpts(node, opts));
-            replaceNode(node, newNode);
-          } else if (tag === "polygon") {
-            const pts = (node.getAttribute("points") || "")
-              .trim()
-              .split(/\s+/)
-              .map(pair => pair.split(",").map(Number));
-            const newNode = rc.polygon(pts, roughOpts(node, opts));
-            replaceNode(node, newNode);
-          } else if (tag === "polyline") {
-            const pts = (node.getAttribute("points") || "")
-              .trim()
-              .split(/\s+/)
-              .map(pair => pair.split(",").map(Number));
-            const newNode = rc.linearPath(pts, roughOpts(node, opts));
-            replaceNode(node, newNode);
-          } else if (tag === "path") {
-            const d = node.getAttribute("d");
-            if (d) {
-              const newNode = rc.path(d, roughOpts(node, opts));
-              replaceNode(node, newNode);
-            }
-          }
-        } catch (e) {
-          // Leave unsupported or problematic nodes unchanged
-        }
-      });
-    }
-
     return {
       renderValue: function(x) {
         el.innerHTML = "";
 
-        const wrapper = document.createElement("div");
-        wrapper.innerHTML = x.svg;
-        const svg = wrapper.querySelector("svg");
+        var opts = x.options || {};
 
-        if (!svg) {
-          el.textContent = "No SVG found.";
+        if (typeof svg2roughjs === "undefined" || typeof svg2roughjs.Svg2Roughjs === "undefined") {
+          el.textContent = "Error: svg2roughjs library not loaded.";
           return;
         }
 
-        svg.style.maxWidth = "100%";
-        svg.style.height = "auto";
-        el.appendChild(svg);
-
-        if (typeof rough === "undefined") {
-          console.error("roughjs is not available");
+        // Parse SVG string into DOM element
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(x.svg, "image/svg+xml");
+        if (doc.querySelector("parsererror")) {
+          el.textContent = "Error: Failed to parse SVG.";
           return;
         }
+        var sourceSvg = doc.documentElement;
 
-        roughenSvg(svg, x.options || {});
+        // svg2roughjs checks document.body.contains() and reads <style> elements,
+        // so the source SVG must be attached to the live DOM (hidden).
+        var hiddenHolder = document.createElement("div");
+        Object.assign(hiddenHolder.style, {
+          position: "absolute", visibility: "hidden",
+          pointerEvents: "none", top: "-9999px", left: "-9999px"
+        });
+        hiddenHolder.appendChild(sourceSvg);
+        document.body.appendChild(hiddenHolder);
+
+        var targetContainer = document.createElement("div");
+        targetContainer.style.width = "100%";
+        el.appendChild(targetContainer);
+
+        var roughConfig = {
+          roughness: opts.roughness !== undefined ? opts.roughness : 1.5,
+          bowing:    opts.bowing    !== undefined ? opts.bowing    : 1,
+          fillStyle: opts.fillStyle || "hachure"
+        };
+
+        var converter = new svg2roughjs.Svg2Roughjs(
+          targetContainer, svg2roughjs.OutputType.SVG, roughConfig
+        );
+
+        if (opts.seed !== null && opts.seed !== undefined) {
+          converter.seed = opts.seed;
+        }
+
+        // preserveText: empty string causes svg2roughjs to inherit source SVG fonts
+        // instead of defaulting to "Comic Sans MS, cursive"
+        converter.fontFamily = opts.preserveText ? "" : undefined;
+
+        converter.svg = sourceSvg;
+
+        (async function() {
+          try {
+            var roughSvg = await converter.sketch();
+            if (roughSvg instanceof SVGElement) {
+              roughSvg.style.maxWidth = "100%";
+              roughSvg.style.height = "auto";
+              roughSvg.style.display = "block";
+            }
+          } catch(err) {
+            el.innerHTML = "";
+            el.textContent = "Error rendering sketch: " + err.message;
+            console.error("svg2roughjs sketch() failed:", err);
+          } finally {
+            if (hiddenHolder.parentNode) document.body.removeChild(hiddenHolder);
+          }
+        })();
       },
 
       resize: function(width, height) {
-        // no-op
+        // Responsive sizing handled via CSS (maxWidth/height:auto). No re-render needed.
       }
     };
   }

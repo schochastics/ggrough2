@@ -20,7 +20,9 @@ rough_plot <- function(
   seed = NULL,
   preserve_text = TRUE
 ) {
-  stopifnot(inherits(plot, "ggplot"))
+  if (!inherits(plot, "ggplot")) stop("`plot` must be a ggplot object.", call. = FALSE)
+  if (!is.numeric(width) || width <= 0)  stop("`width` must be a positive number (inches).", call. = FALSE)
+  if (!is.numeric(height) || height <= 0) stop("`height` must be a positive number (inches).", call. = FALSE)
 
   svg <- svglite::stringSVG(
     code = print(plot),
