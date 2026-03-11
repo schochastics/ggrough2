@@ -3,6 +3,11 @@
 
 # ggrough2 <img src="man/figures/logo.png" align="right" height="139" alt="" />
 
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/schochastics/ggrouph2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/schochastics/ggrouph2/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 **ggrough2** converts ggplot2 visualizations into hand-drawn,
 sketch-style graphics. It works by rendering your plot to SVG and then
 re-drawing every element using [Rough.js](https://roughjs.com/).
