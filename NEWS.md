@@ -1,3 +1,3 @@
-# ggrough2 (development version)
+# ggrough2 0.0.0.9000
 
 * Initial CRAN submission.

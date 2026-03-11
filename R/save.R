@@ -97,7 +97,7 @@ save_rough_image <- function(
     svg_str <- result$result$value
     if (!nzchar(svg_str)) {
       stop(
-        "No rendered SVG found. The sketch may not have finished — try increasing `delay`.",
+        "No rendered SVG found. The sketch may not have finished - try increasing `delay`.",
         call. = FALSE
       )
     }

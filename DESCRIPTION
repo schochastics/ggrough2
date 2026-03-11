@@ -17,7 +17,7 @@ Imports:
     base64enc,
     htmlwidgets,
     svglite,
-    ggplot2
+    knitr
 Suggests:
     chromote,
     webshot2
