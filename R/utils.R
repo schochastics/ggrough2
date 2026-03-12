@@ -55,22 +55,22 @@ rough_options <- function(
   preserve_vertices = NULL
 ) {
   opts <- list(
-    fillWeight            = fill_weight,
-    hachureAngle          = hachure_angle,
-    hachureGap            = hachure_gap,
-    curveStepCount        = curve_step_count,
-    curveFitting          = curve_fitting,
-    strokeLineDash        = stroke_line_dash,
-    strokeLineDashOffset  = stroke_line_dash_offset,
-    fillLineDash          = fill_line_dash,
-    fillLineDashOffset    = fill_line_dash_offset,
-    disableMultiStroke    = disable_multi_stroke,
+    fillWeight = fill_weight,
+    hachureAngle = hachure_angle,
+    hachureGap = hachure_gap,
+    curveStepCount = curve_step_count,
+    curveFitting = curve_fitting,
+    strokeLineDash = stroke_line_dash,
+    strokeLineDashOffset = stroke_line_dash_offset,
+    fillLineDash = fill_line_dash,
+    fillLineDashOffset = fill_line_dash_offset,
+    disableMultiStroke = disable_multi_stroke,
     disableMultiStrokeFill = disable_multi_stroke_fill,
-    simplification        = simplification,
-    dashOffset            = dash_offset,
-    dashGap               = dash_gap,
-    zigzagOffset          = zigzag_offset,
-    preserveVertices      = preserve_vertices
+    simplification = simplification,
+    dashOffset = dash_offset,
+    dashGap = dash_gap,
+    zigzagOffset = zigzag_offset,
+    preserveVertices = preserve_vertices
   )
   # Drop NULLs so JS can detect "not set"
   Filter(Negate(is.null), opts)
@@ -197,6 +197,3 @@ knit_print.ggrough2 <- function(x, options = NULL, ...) {
     NextMethod()
   }
 }
-
-# Null-coalescing operator
-`%||%` <- function(a, b) if (is.null(a)) b else a
