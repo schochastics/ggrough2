@@ -10,9 +10,10 @@
 #'   apply a uniform style to everything.
 #' @param seed Optional seed for deterministic randomness.
 #' @param preserve_text Keep text unchanged.
-#' @param font Path to a font file (.ttf, .otf, .woff, .woff2) to use for text
-#'   labels. Defaults to the bundled Indie Flower handwritten font. Set to
-#'   `NULL` to leave the plot's original fonts unchanged.
+#' @param font Font family name to use for text labels, or `NULL` to leave the
+#'   plot's original fonts unchanged. Defaults to `"IndieFlower"`, the bundled
+#'   hand-drawn font. Any system font name (e.g. `"Arial"`) works directly.
+#'   For Google Fonts, first call [add_google_font()].
 #' @param options A list of additional Rough.js drawing options, typically
 #'   created with [rough_options()]. Controls parameters such as
 #'   `fill_weight`, `hachure_angle`, `hachure_gap`, `simplification`, etc.
@@ -29,7 +30,7 @@ rough_plot <- function(
   bg_fill_style = "solid",
   seed = NULL,
   preserve_text = TRUE,
-  font = system.file("font/IndieFlower-Regular.ttf", package = "ggrough2"),
+  font = "IndieFlower",
   options = rough_options()
 ) {
   if (!inherits(plot, "ggplot")) {
@@ -42,7 +43,7 @@ rough_plot <- function(
     stop("`height` must be a positive number (inches).", call. = FALSE)
   }
 
-  font_data <- make_font_data(font)
+  font_data <- resolve_font(font)
 
   svg <- svglite::stringSVG(
     code = print(plot),
@@ -74,35 +75,63 @@ rough_plot <- function(
   )
 }
 
-make_font_data <- function(font) {
-  if (is.null(font) || !nzchar(font)) {
-    return(NULL)
+resolve_font <- function(family) {
+  if (is.null(family)) return(NULL)
+
+  if (!is.character(family) || length(family) != 1) {
+    stop("`font` must be a single font family name or NULL.", call. = FALSE)
   }
 
-  if (!is.character(font) || length(font) != 1) {
-    stop("`font` must be a single file path or NULL.", call. = FALSE)
-  }
-  if (!file.exists(font)) {
-    stop("`font` file not found: ", font, call. = FALSE)
+  # Bundled IndieFlower
+  if (identical(family, "IndieFlower") || identical(family, "Indie Flower")) {
+    path <- system.file("font/IndieFlower-Regular.ttf", package = "ggrough2")
+    return(encode_font(path, "IndieFlower"))
   }
 
-  ext <- tolower(tools::file_ext(font))
+  # ggrough2 font cache (populated by add_google_font())
+  cache_dir <- tools::R_user_dir("ggrough2", "cache")
+  safe <- gsub("[^A-Za-z0-9_-]", "_", family)
+  cached <- list.files(
+    cache_dir,
+    pattern = paste0("^", safe, "\\.(ttf|otf|woff2?)$"),
+    full.names = TRUE,
+    ignore.case = TRUE
+  )
+  if (length(cached)) return(encode_font(cached[1], family))
+
+  # systemfonts lookup (system fonts — Arial, Helvetica, etc.)
+  if (!requireNamespace("systemfonts", quietly = TRUE)) {
+    stop(
+      "Package 'systemfonts' is required for font name lookup. ",
+      "Install with: install.packages('systemfonts')",
+      call. = FALSE
+    )
+  }
+  info <- systemfonts::font_info(family = family, italic = FALSE, bold = FALSE)
+  path <- info$path[1]
+
+  if (!is.na(path) && nzchar(path) && file.exists(path)) {
+    return(encode_font(path, family))
+  }
+
+  # Font not found on disk — return name only; the browser may have it as a
+  # system font and JS will still apply font-family without embedding.
+  list(name = family, data_uri = NULL)
+}
+
+encode_font <- function(path, name) {
+  ext <- tolower(tools::file_ext(path))
   mime <- switch(
     ext,
-    ttf = "font/truetype",
-    otf = "font/otf",
+    ttf  = "font/truetype",
+    otf  = "font/otf",
     woff = "font/woff",
     woff2 = "font/woff2",
-    stop("`font` must be a .ttf, .otf, .woff, or .woff2 file.", call. = FALSE)
+    "font/truetype"
   )
-
-  raw_bytes <- readBin(font, "raw", file.info(font)$size)
+  raw_bytes <- readBin(path, "raw", file.info(path)$size)
   b64 <- base64enc::base64encode(raw_bytes)
-
-  list(
-    name = tools::file_path_sans_ext(basename(font)),
-    data_uri = paste0("data:", mime, ";base64,", b64)
-  )
+  list(name = name, data_uri = paste0("data:", mime, ";base64,", b64))
 }
 
 #' @export

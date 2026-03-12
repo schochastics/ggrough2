@@ -120,7 +120,7 @@ HTMLWidgets.widget({
 
               var roughSvg = await converter.sketch();
               if (roughSvg instanceof SVGElement) {
-                if (x.font) {
+                if (x.font && x.font.data_uri) {
                   var style = document.createElementNS("http://www.w3.org/2000/svg", "style");
                   style.textContent = '@font-face { font-family: "' + x.font.name +
                     '"; src: url("' + x.font.data_uri + '"); }';
@@ -193,7 +193,7 @@ HTMLWidgets.widget({
               fgConverter.svg = fgSvg;
               var fgRoughSvg = await fgConverter.sketch();
 
-              if (x.font && fgRoughSvg instanceof SVGElement) {
+              if (x.font && x.font.data_uri && fgRoughSvg instanceof SVGElement) {
                 var fgStyle = document.createElementNS("http://www.w3.org/2000/svg", "style");
                 fgStyle.textContent = '@font-face { font-family: "' + x.font.name +
                   '"; src: url("' + x.font.data_uri + '"); }';

@@ -2,6 +2,7 @@
 
 S3method(knit_print,ggrough2)
 S3method(print,ggrough2)
+export(add_google_font)
 export(rough_options)
 export(rough_plot)
 export(save_rough_html)

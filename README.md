@@ -125,12 +125,16 @@ rough_plot(p, seed = 42)
 
 Text labels default to the bundled [Indie
 Flower](https://fonts.google.com/specimen/Indie+Flower) handwritten
-font. Supply any `.ttf`, `.otf`, `.woff`, or `.woff2` file to use a
-different one, or set `font = NULL` to keep the original plot fonts.
+font. Supply any font family name, or set `font = NULL` to keep the
+original plot fonts.
 
 ``` r
-# custom font
-rough_plot(p, font = "path/to/myfont.ttf")
+# any system font by name
+rough_plot(p, font = "Arial")
+
+# Google Font — download once, then use by name
+add_google_font("Dancing Script")
+rough_plot(p, font = "Dancing Script")
 
 # keep the plot's original fonts
 rough_plot(p, font = NULL)

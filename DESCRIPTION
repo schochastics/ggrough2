@@ -17,6 +17,7 @@ Imports:
     base64enc,
     htmlwidgets,
     svglite,
+    systemfonts,
     knitr
 Suggests:
     chromote,

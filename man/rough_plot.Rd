@@ -14,7 +14,7 @@ rough_plot(
   bg_fill_style = "solid",
   seed = NULL,
   preserve_text = TRUE,
-  font = system.file("font/IndieFlower-Regular.ttf", package = "ggrough2"),
+  font = "IndieFlower",
   options = rough_options()
 )
 }
@@ -37,9 +37,10 @@ apply a uniform style to everything.}
 
 \item{preserve_text}{Keep text unchanged.}
 
-\item{font}{Path to a font file (.ttf, .otf, .woff, .woff2) to use for text
-labels. Defaults to the bundled Indie Flower handwritten font. Set to
-\code{NULL} to leave the plot's original fonts unchanged.}
+\item{font}{Font family name to use for text labels, or \code{NULL} to leave the
+plot's original fonts unchanged. Defaults to \code{"IndieFlower"}, the bundled
+hand-drawn font. Any system font name (e.g. \code{"Arial"}) works directly.
+For Google Fonts, first call \code{\link[=add_google_font]{add_google_font()}}.}
 
 \item{options}{A list of additional Rough.js drawing options, typically
 created with \code{\link[=rough_options]{rough_options()}}. Controls parameters such as

@@ -151,6 +151,65 @@ validate_rough_options <- function(
   c(base, options)
 }
 
+#' Add a Google Font for use with rough_plot()
+#'
+#' Downloads a font from Google Fonts and caches it locally so that
+#' `rough_plot(p, font = family)` can embed it. Requires an internet
+#' connection on first use; subsequent calls for the same family are instant.
+#'
+#' @param name Google Fonts name, e.g. `"Dancing Script"`.
+#' @param family Font family name to use later in [rough_plot()]. Defaults to
+#'   `name`.
+#'
+#' @return The `family` name, invisibly.
+#' @export
+add_google_font <- function(name, family = name) {
+  # Fetch Google Fonts CSS2 API to discover the font file URL
+  css_url <- paste0(
+    "https://fonts.googleapis.com/css2?family=",
+    utils::URLencode(name, reserved = FALSE),
+    "&display=swap"
+  )
+  css_text <- tryCatch({
+    con <- url(css_url, open = "r")
+    on.exit(close(con), add = TRUE)
+    paste(readLines(con, warn = FALSE), collapse = "\n")
+  }, error = function(e) {
+    stop(
+      "Failed to fetch Google Fonts data for '", name,
+      "'. Check your internet connection and font name spelling.",
+      call. = FALSE
+    )
+  })
+
+  # Extract font file URLs — prefer TTF, fall back to WOFF2
+  ttf  <- regmatches(css_text, gregexpr("https://[^)]+\\.ttf",    css_text))[[1]]
+  woff <- regmatches(css_text, gregexpr("https://[^)]+\\.woff2?", css_text))[[1]]
+  urls <- c(ttf, woff)
+
+  if (!length(urls)) {
+    stop(
+      "Could not parse a font URL for '", name,
+      "'. Check the spelling against fonts.google.com.",
+      call. = FALSE
+    )
+  }
+
+  font_url <- urls[1]
+  ext <- tolower(tools::file_ext(font_url))
+
+  # Download to ggrough2's own cache directory
+  cache_dir <- tools::R_user_dir("ggrough2", "cache")
+  dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
+  safe <- gsub("[^A-Za-z0-9_-]", "_", family)
+  font_file <- file.path(cache_dir, paste0(safe, ".", ext))
+
+  utils::download.file(font_url, destfile = font_file, mode = "wb", quiet = TRUE)
+  message("Downloaded '", family, "' \u2014 use rough_plot(p, font = \"", family, "\")")
+
+  invisible(family)
+}
+
 #' @importFrom knitr knit_print
 #' @export
 knit_print.ggrough2 <- function(x, options = NULL, ...) {
