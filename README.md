@@ -5,9 +5,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/schochastics/ggrough/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/schochastics/ggrough/actions/workflows/R-CMD-check.yaml)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/ggrough2)](https://CRAN.R-project.org/package=ggrough2)
+[![R-CMD-check](https://github.com/schochastics/ggrough2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/schochastics/ggrough2/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 **ggrough2** converts ggplot2 visualizations into hand-drawn,
