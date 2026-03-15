@@ -38,8 +38,8 @@ Pass any ggplot object to `rough_plot()`.
 library(ggplot2)
 library(ggrough2)
 
-p <- ggplot(mpg, aes(displ, hwy,color=manufacturer)) +
-  geom_point()+theme(legend.position = "bottom")
+p <- ggplot(mpg, aes(displ, hwy, color = manufacturer)) +
+  geom_point() + theme(legend.position = "bottom")
 
 rough_plot(p, width = 7, height = 5)
 ```

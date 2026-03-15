@@ -1,8 +1,3 @@
-// Compute a representative stroke-width (in SVG user units) from the source SVG.
-// svglite embeds stroke widths on individual elements and/or in a <style> block.
-// We sample all drawn elements, collect non-zero stroke-widths, and return the
-// median. Falls back to the value parsed from the <style> block, then to 0.75
-// (svglite's typical axis line width ≈ 0.5pt at 96 dpi).
 function _referenceStrokeWidth(svg) {
   var tags = ["rect", "path", "line", "circle", "ellipse", "polygon", "polyline"];
   var widths = [];
@@ -21,7 +16,6 @@ function _referenceStrokeWidth(svg) {
     return widths[Math.floor(widths.length / 2)];
   }
 
-  // Fall back: parse the embedded <style> block for a stroke-width rule
   var styleEl = svg.querySelector("style");
   if (styleEl) {
     var m = styleEl.textContent.match(/stroke-width\s*:\s*([\d.]+)/);
@@ -31,7 +25,7 @@ function _referenceStrokeWidth(svg) {
     }
   }
 
-  return 0.75; // svglite default: ~0.5pt axis lines at 96 dpi
+  return 0.75;
 }
 
 HTMLWidgets.widget({
@@ -77,7 +71,6 @@ HTMLWidgets.widget({
           fillStyle: opts.fillStyle || "hachure"
         };
 
-        // Forward any extra Rough.js options (fillWeight, hachureAngle, etc.)
         var baseKeys = new Set(["roughness","bowing","fillStyle","bgFillStyle","seed","preserveText"]);
         Object.keys(opts).forEach(function(k) {
           if (!baseKeys.has(k) && opts[k] !== null && opts[k] !== undefined) {
@@ -85,13 +78,6 @@ HTMLWidgets.widget({
           }
         });
 
-        // Normalize fill density across elements.
-        // Rough.js defaults hachureGap to 4× and fillWeight to 0.5× each element's
-        // stroke-width. When elements have varying or zero stroke-widths (common in
-        // ggplot2 output), this produces inconsistent fill density across bars.
-        // Fix: derive a single reference stroke-width and set absolute values so
-        // all elements use the same fill spacing. User overrides via rough_options()
-        // take precedence because they are already in roughConfig at this point.
         if (roughConfig.hachureGap == null || roughConfig.fillWeight == null) {
           var _refSw = _referenceStrokeWidth(sourceSvg);
           if (roughConfig.hachureGap  == null) roughConfig.hachureGap  = _refSw * 4;

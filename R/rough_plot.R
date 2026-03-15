@@ -69,14 +69,16 @@ rough_plot <- function(
   htmlwidgets::createWidget(
     name = "ggrough2",
     x = x,
-    width  = width  * 96,
+    width = width * 96,
     height = height * 96,
     package = "ggrough2"
   )
 }
 
 resolve_font <- function(family) {
-  if (is.null(family)) return(NULL)
+  if (is.null(family)) {
+    return(NULL)
+  }
 
   if (!is.character(family) || length(family) != 1) {
     stop("`font` must be a single font family name or NULL.", call. = FALSE)
@@ -88,7 +90,6 @@ resolve_font <- function(family) {
     return(encode_font(path, "IndieFlower"))
   }
 
-  # ggrough2 font cache (populated by add_google_font())
   cache_dir <- tools::R_user_dir("ggrough2", "cache")
   safe <- gsub("[^A-Za-z0-9_-]", "_", family)
   cached <- list.files(
@@ -97,9 +98,10 @@ resolve_font <- function(family) {
     full.names = TRUE,
     ignore.case = TRUE
   )
-  if (length(cached)) return(encode_font(cached[1], family))
+  if (length(cached)) {
+    return(encode_font(cached[1], family))
+  }
 
-  # systemfonts lookup (system fonts — Arial, Helvetica, etc.)
   if (!requireNamespace("systemfonts", quietly = TRUE)) {
     stop(
       "Package 'systemfonts' is required for font name lookup. ",
@@ -114,8 +116,6 @@ resolve_font <- function(family) {
     return(encode_font(path, family))
   }
 
-  # Font not found on disk — return name only; the browser may have it as a
-  # system font and JS will still apply font-family without embedding.
   list(name = family, data_uri = NULL)
 }
 
@@ -123,8 +123,8 @@ encode_font <- function(path, name) {
   ext <- tolower(tools::file_ext(path))
   mime <- switch(
     ext,
-    ttf  = "font/truetype",
-    otf  = "font/otf",
+    ttf = "font/truetype",
+    otf = "font/otf",
     woff = "font/woff",
     woff2 = "font/woff2",
     "font/truetype"

@@ -170,26 +170,33 @@ add_google_font <- function(name, family = name) {
     utils::URLencode(name, reserved = FALSE),
     "&display=swap"
   )
-  css_text <- tryCatch({
-    con <- url(css_url, open = "r")
-    on.exit(close(con), add = TRUE)
-    paste(readLines(con, warn = FALSE), collapse = "\n")
-  }, error = function(e) {
-    stop(
-      "Failed to fetch Google Fonts data for '", name,
-      "'. Check your internet connection and font name spelling.",
-      call. = FALSE
-    )
-  })
+  css_text <- tryCatch(
+    {
+      con <- url(css_url, open = "r")
+      on.exit(close(con), add = TRUE)
+      paste(readLines(con, warn = FALSE), collapse = "\n")
+    },
+    error = function(e) {
+      stop(
+        "Failed to fetch Google Fonts data for '",
+        name,
+        "'. Check your internet connection and font name spelling.",
+        call. = FALSE
+      )
+    }
+  )
 
   # Extract font file URLs — prefer TTF, fall back to WOFF2
-  ttf  <- regmatches(css_text, gregexpr("https://[^)]+\\.ttf",    css_text))[[1]]
-  woff <- regmatches(css_text, gregexpr("https://[^)]+\\.woff2?", css_text))[[1]]
+  ttf <- regmatches(css_text, gregexpr("https://[^)]+\\.ttf", css_text))[[1]]
+  woff <- regmatches(css_text, gregexpr("https://[^)]+\\.woff2?", css_text))[[
+    1
+  ]]
   urls <- c(ttf, woff)
 
   if (!length(urls)) {
     stop(
-      "Could not parse a font URL for '", name,
+      "Could not parse a font URL for '",
+      name,
       "'. Check the spelling against fonts.google.com.",
       call. = FALSE
     )
@@ -204,8 +211,19 @@ add_google_font <- function(name, family = name) {
   safe <- gsub("[^A-Za-z0-9_-]", "_", family)
   font_file <- file.path(cache_dir, paste0(safe, ".", ext))
 
-  utils::download.file(font_url, destfile = font_file, mode = "wb", quiet = TRUE)
-  message("Downloaded '", family, "' \u2014 use rough_plot(p, font = \"", family, "\")")
+  utils::download.file(
+    font_url,
+    destfile = font_file,
+    mode = "wb",
+    quiet = TRUE
+  )
+  message(
+    "Downloaded '",
+    family,
+    "' \u2014 use rough_plot(p, font = \"",
+    family,
+    "\")"
+  )
 
   invisible(family)
 }
@@ -245,7 +263,6 @@ knit_print.ggrough2 <- function(x, options = NULL, ...) {
       )
     )
 
-    # Return the image path wrapped in knitr's image output structure
     knitr::asis_output(
       paste0("![](", knitr::opts_knit$get("base.url"), tmp_png, ")")
     )
